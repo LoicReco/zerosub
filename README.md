@@ -173,3 +173,7 @@ Remove added accounts from **Accounts** first, so they're signed out. Then run:
 paseo plugin remove zerosub
 rm -rf ~/.paseo/zerosub
 ```
+
+## Fork note (LoicReco)
+
+Branch `loic/next-agent-account`, based on v1.5.1, adds a one-time **next new agent** pick: the ⌘K entry "Next new Claude/ChatGPT agent: use …" or the plus-square button on an account card makes the next interactive agent of that family (in a new workspace or tab) start on that account. The pick is used once and expires after 10 minutes. Installed as a directory plugin with the same id (`zerosub`), so accounts and settings are unchanged.
