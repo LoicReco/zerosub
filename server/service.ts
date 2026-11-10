@@ -412,6 +412,8 @@ export class Service {
     });
     if (!decision) return undefined;
     const { account } = decision;
+    const picked = request.reason === "create" ? composerAccount(request) : undefined;
+    if (picked) console.log(`[ZeroSub] composer pick: ${request.agentId} asked for ${picked}, starts on ${account.label}`);
     if (decision.usedNextPick) {
       await this.store.update((draft) => {
         if (draft.nextAgent?.[family]?.accountId === account.id) draft.nextAgent[family] = null;
