@@ -7,6 +7,7 @@ import type {
   PluginSessionOpenRequest,
 } from "@getpaseo/plugin/server";
 import {
+  COMPOSER_ACCOUNT_KEY,
   FAMILY_LABEL,
   type AccountView,
   type AgentRoute,
@@ -407,6 +408,7 @@ export class Service {
       portable: adapter.portable,
       usageOf: (id) => this.usage.get(id),
       allowNextPick: request.purpose === "interactive",
+      requestedAccountId: composerAccount(request),
     });
     if (!decision) return undefined;
     const { account } = decision;
@@ -2027,4 +2029,10 @@ function log(message: string, error: unknown): void {
 
 export function describe(error: unknown): string {
   return error instanceof Error ? error.message : String(error);
+}
+
+/** The account picked in the new agent's composer. Older Paseo versions send no metadata. */
+function composerAccount(request: PluginSessionOpenRequest): string | undefined {
+  const value = (request as { metadata?: Readonly<Record<string, unknown>> }).metadata?.[COMPOSER_ACCOUNT_KEY];
+  return typeof value === "string" && value.length > 0 ? value : undefined;
 }

@@ -5,6 +5,9 @@ import { useSyncExternalStore } from "react";
 import type { StateView } from "../shared/model";
 import { getState } from "../shared/rpc";
 
+/** How RPC input travels (Paseo keeps binary as bytes); the plugin package does not export this type. */
+type WireInput<Value> = Value extends Uint8Array ? Uint8Array : Value;
+
 const IDLE_POLL_MS = 20_000;
 /** While the Accounts screen is open, so usage moves as agents use it. */
 export const VISIBLE_POLL_MS = 4_000;
@@ -25,7 +28,7 @@ export interface ZeroSubStore {
   stop(): void;
   rpc<InputSchema extends ZodType, OutputSchema extends ZodType>(
     contract: PluginRpcContract<InputSchema, OutputSchema>,
-    input: ZodInput<InputSchema>,
+    input: WireInput<ZodInput<InputSchema>>,
   ): Promise<ZodOutput<OutputSchema>>;
   subscribe(listener: () => void): () => void;
   getSnapshot(): StoreSnapshot;
@@ -62,7 +65,7 @@ export function createZeroSubStore(client: PluginClientContext): ZeroSubStore {
   /** Calls a daemon handler, then refreshes state so every view sees the result. */
   async function rpc<InputSchema extends ZodType, OutputSchema extends ZodType>(
     contract: PluginRpcContract<InputSchema, OutputSchema>,
-    input: ZodInput<InputSchema>,
+    input: WireInput<ZodInput<InputSchema>>,
   ): Promise<ZodOutput<OutputSchema>> {
     try {
       return await client.rpc(contract, input);

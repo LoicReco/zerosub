@@ -1,6 +1,6 @@
 {
   "id": "zerosub",
   "requirements": {
-    "paseo": ">=0.9.1"
+    "paseo": ">=0.16.0-beta.1"
   }
 }

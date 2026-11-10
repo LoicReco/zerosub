@@ -101,6 +101,8 @@ export interface RouteInput {
   usageOf(accountId: string): Usage | null | undefined;
   /** Whether this session may use the one-time "next new agent" pick (interactive sessions only). */
   allowNextPick?: boolean;
+  /** The account the user chose in the composer before creating the agent (agent metadata). */
+  requestedAccountId?: string;
 }
 
 export interface RouteDecision {
@@ -130,6 +132,14 @@ export function chooseAccount(state: StoredState, input: RouteInput): RouteDecis
   const bound = findAccount(state, binding?.accountId);
   let account = bound && bound.family === input.family ? bound : undefined;
   let bind: Binding | null = null;
+
+  if (!account && fresh && input.requestedAccountId) {
+    const requested = findAccount(state, input.requestedAccountId);
+    if (requested && requested.family === input.family) {
+      account = requested;
+      bind = { accountId: requested.id, source: "user", at };
+    }
+  }
 
   let usedNextPick = false;
   if (!account && fresh && input.allowNextPick) {

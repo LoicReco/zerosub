@@ -271,6 +271,11 @@ class FakeDaemon {
           type: "list_provider_models_response",
           payload: { requestId: request.requestId, provider: request.provider, models: [{ provider: request.provider, id: "synthetic-model", label: "Synthetic", isDefault: true }], error: null, fetchedAt: this.now() },
         };
+      case "list_provider_features_request":
+        return {
+          type: "list_provider_features_response",
+          payload: { requestId: request.requestId, provider: request.draftConfig.provider, features: [], error: null, fetchedAt: this.now() },
+        } as Outbound;
       case "agent.create.request": return this.create(request);
       case "creation.subscribe.request": {
         const snapshot = this.creations.get(request.idempotencyKey) ?? null;

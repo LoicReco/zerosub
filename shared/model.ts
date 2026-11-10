@@ -165,3 +165,9 @@ export const StateViewSchema = z.object({
   warnings: z.array(z.string()),
 });
 export type StateView = z.infer<typeof StateViewSchema>;
+
+/**
+ * Agent metadata key holding the account the user picked in the composer of a new agent (a draft
+ * tab or the New workspace screen). The daemon reads it once, when the agent is created.
+ */
+export const COMPOSER_ACCOUNT_KEY = "zerosub.account";
